@@ -1,20 +1,11 @@
-::trainPath       /home/sutd/Ji/Data/TaggingTheWeb/train/wsj_train.pos.gen2
-::devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen2
-::devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/email_dev.pos.gen.nor2
-::devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/weblog_dev.pos.gen.nor2
-::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/wsj_test.pos.gen2
-::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/answer_test.pos.gen.nor2
-::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/review_test.pos.gen.nor2
-::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup_test.pos.gen.nor2
-
-trainPath       sampleData/wsj_train.pos.gen2.300
-devPath         sampleData/wsj_dev.pos.gen2.300
-devPath         sampleData/email_dev.pos.gen.nor2.300
-devPath         sampleData/weblog_dev.pos.gen.nor2.300
-testPath        sampleData/wsj_test.pos.gen2.300
-testPath        sampleData/answer_test.pos.gen.nor2.300
-testPath        sampleData/review_test.pos.gen.nor2.300
-testPath        sampleData/newsgroup_test.pos.gen.nor2.300
+trainPath       /home/sutd/Ji/Data/TaggingTheWeb/train/wsj_train.pos.gen2
+devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen2
+devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/email_dev.pos.gen.nor2
+devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/weblog_dev.pos.gen.nor2
+testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/wsj_test.pos.gen2
+testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/answer_test.pos.gen.nor2
+testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/review_test.pos.gen.nor2
+testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup_test.pos.gen.nor2
 
 templatePath    ../templatesEn/tempGFNoOP1.2.txt
 nRound          15
