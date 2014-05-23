@@ -1,0 +1,36 @@
+:: data converted using penn2malt
+trainPath				/home/sutd/Ji/Data/TaggingTheWeb/train/wsj_train.pos.gen
+::trainPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen
+
+devPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen
+devPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/email_dev.pos.gen.nor
+devPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/weblog_dev.pos.gen.nor
+
+testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/wsj-test.pos.gen
+testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/answer-test.pos.gen.nor
+testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/review-test.pos.gen.nor
+testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup-test.pos.gen.nor
+
+templatePath		../templatesEn/tempGFNoOP1.2.txt
+::templatePath		../templatesEn/tempEbdOnly.txt
+nRound					15
+::tagLabelPath		tags.txt
+
+:: can be either top_one, all,  
+prefix				  STD_WSJ	
+nFixLen					4	
+strLogDir				../TWeb/logsEn/
+strModelPath		../TWeb/modelsEn/
+strDLPrefix			../TWeb/l2r2/1_3NoWSJ_h300c17e38
+
+:: searn based learning
+bEnTagger    		true	
+bEarlyUpdate    true
+
+bTagVerbose				false	
+fMargin						0.5
+fRate							0.1
+
+vIHSize							20 
+vIHType							linear	
+
