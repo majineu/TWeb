@@ -1,31 +1,29 @@
-:: data converted using penn2malt
-::trainPath				/home/sutd/Ji/Tagger/wsj/wsj00-18.malt.gen.nor
-::devPath						/home/sutd/Ji/Tagger/wsj/wsj19-21.malt.gen.nor
-::testPath					/home/sutd/Ji/Tagger/wsj/wsj22-24.malt.gen.nor
-trainPath					/home/sutd/Ji/Tagger/wsj/wsj00-18.malt.webTagger
-devPath						/home/sutd/Ji/Tagger/wsj/wsj19-21.malt.webTagger
-testPath					/home/sutd/Ji/Tagger/wsj/wsj22-24.malt.webTagger
+::trainPath   /home/sutd/Ji/Tagger/wsj/wsj00-18.malt.webTagger
+::devPath     /home/sutd/Ji/Tagger/wsj/wsj19-21.malt.webTagger
+::testPath    /home/sutd/Ji/Tagger/wsj/wsj22-24.malt.webTagger
+trainPath     /home/sutd/Ji/Tagger/wsj/train.gen
+devPath       /home/sutd/Ji/Tagger/wsj/dev.gen
+testPath      /home/sutd/Ji/Tagger/wsj/test.gen
 
-::templatePath		../templatesEn/tempGFNoOP1.2.txt
-templatePath		../templatesEn/tempNoOP.txt
-::templatePath		../templatesEn/tempOP.txt
-nRound					10
+templatePath ../templatesEn/tempGFNoOP1.2.txt
+::templatePath  ../templatesEn/tempNoOP.txt
+nRound        10
 
 :: can be either top_one, all,  
-prefix				  STD_WSJ_WORD_CH	
-nFixLen					4	
-strLogDir				../TWeb/logsEn/
-strModelPath		../TWeb/modelsEn/
-::strDLPrefix			../TWeb/l2r2/1_3NoWSJ_h300c17e38
+prefix        STD_WSJ_WORD_CH	
+nFixLen       4	
+strLogDir     ../TWeb/logsEn/
+strModelPath  ../TWeb/modelsEn/
+::strRBMPrefix   ../TWeb/l2r2/1_3NoWSJ_h300c17e38
 
 :: searn based learning
-bEnTagger    		true	
-bEarlyUpdate   	true	
+bEnTagger     true	
+bEarlyUpdate  true	
 
-bTagVerbose				false	
-fMargin						0.1
-fRate							0.1
+bTagVerbose   false	
+fMargin       0.5
+fRate         0.1
 
-vIHSize						100 
-vIHType						linear	
+vIHSize       20 
+vIHType       linear	
 

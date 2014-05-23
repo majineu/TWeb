@@ -42,7 +42,7 @@ public:
 	static string	strTagLabelPath;
 	static string	strPrefix;
 	static string	strJKPath;
-	static string	strDLPrefix;				// currently, wrrbm
+	static string	strRBMPrefix;				// currently, wrrbm
 	static string strOutLayerType;
 	static string strLogDir;
 	static string strDBNPrefix;				// dbn prefix

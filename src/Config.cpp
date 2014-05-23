@@ -42,7 +42,7 @@ string	CConfig:: strTempPath		= strNull;
 string	CConfig:: strModelPath	= strNull;
 string	CConfig:: strPrefix			= strNull;
 string  CConfig:: strJKPath			= strNull;
-string	CConfig:: strDLPrefix		= strNull;
+string	CConfig:: strRBMPrefix	= strNull;
 string	CConfig:: strTagLabelPath	= strNull;
 string  CConfig:: strOutLayerType = strNull;
 string	CConfig:: strDBNPrefix		= strNull;
@@ -169,10 +169,10 @@ ReadConfig(const string & strPath)
 			fprintf(stderr, "model path:       %s\n", strModelPath.c_str());
 		}
 		
-		else if (strcmp(pKey, "strDLPrefix") == 0)
+		else if (strcmp(pKey, "strRBMPrefix") == 0)
 		{
-			strDLPrefix = pVal;
-			fprintf(stderr, "WRRBM prefix:     %s\n", strDLPrefix.c_str());
+			strRBMPrefix = pVal;
+			fprintf(stderr, "WRRBM prefix:     %s\n", strRBMPrefix.c_str());
 		}
 		else if (strcmp(pKey, "strOutLayerType") == 0)
 		{
@@ -202,7 +202,12 @@ ReadConfig(const string & strPath)
 		else if (strcmp(pKey, "nCutoff") == 0)
 		{
 			CConfig::nCutoff	= atoi(pVal);
-			fprintf(stderr, "Lexicon cutoff:   %d\n", CConfig::nCutoff);
+			fprintf(stderr, "Lexicon cutoff:   %d\n", nCutoff);
+		}
+		else if (strcmp(pKey, "templatePath") == 0)
+		{
+			strTempPath	= pVal;
+			fprintf(stderr, "template file:    %s\n", strTrainPath.c_str());
 		}
 		else if (strcmp(pKey, "bJK") == 0)
 			bJK		 = string(pVal) == "true";
@@ -210,8 +215,6 @@ ReadConfig(const string & strPath)
 			nFordJK	 = atoi(pVal);
 		else if (strcmp(pKey, "JKPath") == 0)
 			strJKPath	 = pVal;
-		else if (strcmp(pKey, "templatePath") == 0)
-			strTempPath	= pVal;
 		else if (strcmp(pKey, "nRound") == 0)
 			nRound		= atoi(pVal);
 		else if (strcmp(pKey, "nRare") == 0)

@@ -1,36 +1,41 @@
-:: data converted using penn2malt
-trainPath				/home/sutd/Ji/Data/TaggingTheWeb/train/wsj_train.pos.gen
-::trainPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen
+::trainPath       /home/sutd/Ji/Data/TaggingTheWeb/train/wsj_train.pos.gen2
+::devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen2
+::devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/email_dev.pos.gen.nor2
+::devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/weblog_dev.pos.gen.nor2
+::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/wsj_test.pos.gen2
+::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/answer_test.pos.gen.nor2
+::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/review_test.pos.gen.nor2
+::testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup_test.pos.gen.nor2
 
-devPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen
-devPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/email_dev.pos.gen.nor
-devPath						/home/sutd/Ji/Data/TaggingTheWeb/dev/weblog_dev.pos.gen.nor
+trainPath       sampleData/wsj_train.pos.gen2.300
+devPath         sampleData/wsj_dev.pos.gen2.300
+devPath         sampleData/email_dev.pos.gen.nor2.300
+devPath         sampleData/weblog_dev.pos.gen.nor2.300
+testPath        sampleData/wsj_test.pos.gen2.300
+testPath        sampleData/answer_test.pos.gen.nor2.300
+testPath        sampleData/review_test.pos.gen.nor2.300
+testPath        sampleData/newsgroup_test.pos.gen.nor2.300
 
-testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/wsj-test.pos.gen
-testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/answer-test.pos.gen.nor
-testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/review-test.pos.gen.nor
-testPath					/home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup-test.pos.gen.nor
+templatePath    ../templatesEn/tempGFNoOP1.2.txt
 
-templatePath		../templatesEn/tempGFNoOP1.2.txt
-::templatePath		../templatesEn/tempEbdOnly.txt
-nRound					15
-::tagLabelPath		tags.txt
+templatePath    ../templatesEn/tempGFNoOP1.2.txt
+nRound          15
 
 :: can be either top_one, all,  
-prefix				  STD_WSJ	
-nFixLen					4	
-strLogDir				../TWeb/logsEn/
-strModelPath		../TWeb/modelsEn/
-strDLPrefix			../TWeb/l2r2/1_3NoWSJ_h300c17e38
+prefix          WebTagger	
+nFixLen         4	
+strLogDir       ../TWeb/logsEn/
+strModelPath    ../TWeb/modelsEn/
+strRBMPrefix    ../TWeb/l2r2/1_3NoWSJ_h300c17e38
 
 :: searn based learning
-bEnTagger    		true	
+bEnTagger       true	
 bEarlyUpdate    true
 
-bTagVerbose				false	
-fMargin						0.5
-fRate							0.1
+bTagVerbose     false	
+fMargin         0.5
+fRate           0.1
 
-vIHSize							20 
-vIHType							linear	
+vIHSize         20 
+vIHType         linear	
 

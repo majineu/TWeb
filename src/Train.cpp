@@ -286,8 +286,8 @@ void Training(const string &strPath)
 	
 	// init global g-form map
 	SWRRBM *pRBM =  NULL;
-	if (CConfig::strDLPrefix != CConfig::strNull)
-		SWRRBM::RBMFromFile(CConfig::strDLPrefix);
+	if (CConfig::strRBMPrefix != CConfig::strNull)
+		pRBM = SWRRBM::RBMFromFile(CConfig::strRBMPrefix);
 	CRBMNN rbmNN(pRBM, false);	
 
 	// reading training, dev and test data
