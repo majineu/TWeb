@@ -14,13 +14,16 @@ class CPool
 public:
 	CPool(void):pCurBlock(NULL), totalSize(0){}
 	~CPool(void);
-	void * Allocate( size_t size );
+	void * Allocate(size_t size);
 	void Recycle();
 	void Free();
 	void Test();
-	void ShowSize(){fprintf(stderr, "Pool Size %lu k\n", totalSize >> 10);}
+	void ShowSize()
+	{
+		fprintf(stderr, "Pool Size %lu k\n", totalSize >> 10);
+	}
 private:
-	SBlock * allocateBlock( size_t size )
+	SBlock * allocateBlock(size_t size)
 	{
 		size_t allocSize = size > BLOCK_SIZE ? size : BLOCK_SIZE;
 		SBlock * pBlock = (SBlock *)std::malloc(allocSize + sizeof(SBlock));

@@ -1,7 +1,7 @@
 #include "Pool.h"
 #include <ctime>
 #include <vector>
-#define MAX_POOL_SIZE  1024 * 1024 * 64
+#define MAX_POOL_SIZE  1 << 23
 CPool::~CPool(void)
 {
 	Free();
@@ -72,51 +72,3 @@ void CPool::Recycle()
 	pCurBlock = NULL;
 }
 
-
-//int main(int argc, char ** argv)
-//{
-//  return 0;
-//}
-
-/*
-void CPool::Test()
-{
-	
-	int iterNum = 1000000;
-
-	std::vector<char*> pVec(iterNum);
-	char * pCur;
-	clock_t start = clock();
-	for( int k = 0; k < 0; ++k )
-	{
-		for( int i = 0; i < iterNum; ++i )
-		{
-			pCur = (char*) malloc( 10 );
-			strcpy( pCur, "hello" );
-			pVec[i] = pCur;
-		}
-		for( int i = 0; i < iterNum; ++i )
-			delete pVec[i];
-	}
-	printf("time eclipsed %d\n", clock() - start);
-	system("pause");
-	start = clock();
-	for( int k = 0; k < 40; ++k )
-	{
-		for( int i = 0; i < iterNum; ++i )
-		{
-			pCur = (char*) Allocate(10);
-			strcpy( pCur, "hello");
-			pVec[i] = pCur;
-		}
-		Recycle();
-	}
-	Free();
-	pVec.clear();
-	printf("time eclipsed %d\n", clock() - start);
-	system("pause");
-}
-*/
-
-
-//-------------------------------------------------------------------------------
