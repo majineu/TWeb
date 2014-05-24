@@ -5,24 +5,21 @@ trainPath     /home/sutd/Ji/Tagger/wsj/train.gen
 devPath       /home/sutd/Ji/Tagger/wsj/dev.gen
 testPath      /home/sutd/Ji/Tagger/wsj/test.gen
 
-templatePath ../templatesEn/tempGFNoOP1.2.txt
-::templatePath  ../templatesEn/tempNoOP.txt
 nRound        10
 
-:: can be either top_one, all,  
 prefix        STD_WSJ_WORD_CH	
-nFixLen       4	
+nFixLen       10	
 strLogDir     ../TWeb/logsEn/
 strModelPath  ../TWeb/modelsEn/
-::strRBMPrefix   ../TWeb/l2r2/1_3NoWSJ_h300c17e38
+templatePath  templates/tempGFNoOP1.2.txt
+::templatePath  ../templatesEn/tempNoOP.txt
 
-:: searn based learning
 bEnTagger     true	
 bEarlyUpdate  true	
-
 bTagVerbose   false	
-fMargin       0.5
-fRate         0.1
+fMargin       0.05
+fRate         0.01
+bCharacterFeatureFromWord true
 
 vIHSize       20 
 vIHType       linear	

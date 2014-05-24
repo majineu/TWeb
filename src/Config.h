@@ -32,6 +32,7 @@ public:
 	static bool			bRBMNN;
 	static bool			bDBNNN;
 	static bool 		bEarlyUpdate;
+	static bool     bCharFFromWord;
 
 	static string	strNull;
 	static string	strTrainPath;

@@ -28,6 +28,7 @@ bool	CConfig::bJK			 = false;
 bool  CConfig::bEnTagger = true;     // by default, English POS tagger
 bool	CConfig::bLen1WordEndWord	= true;			
 bool	CConfig::bTagVerbose = false;
+bool	CConfig::bCharFFromWord = false;
 
 double CConfig::fRate 	= 0.1;
 double CConfig::fMargin = 0.1;
@@ -179,6 +180,13 @@ ReadConfig(const string & strPath)
 			strOutLayerType = pVal;
 			fprintf(stderr, "Out layer type:   %s\n", strOutLayerType.c_str());
 		}
+		else if (strcmp(pKey, "bCharacterFeatureFromWord") == 0)
+		{
+			bCharFFromWord = string(pVal) == "true";
+			fprintf(stderr, "Char feature from Word: %s\n", 
+							bCharFFromWord ? "true":"false");
+
+		}
 		else if (strcmp(pKey, "bTagVerbose") == 0)
 		{
 			bTagVerbose = strcmp(pVal, "true") == 0;
@@ -207,7 +215,7 @@ ReadConfig(const string & strPath)
 		else if (strcmp(pKey, "templatePath") == 0)
 		{
 			strTempPath	= pVal;
-			fprintf(stderr, "template file:    %s\n", strTrainPath.c_str());
+			fprintf(stderr, "template file:    %s\n", strTempPath.c_str());
 		}
 		else if (strcmp(pKey, "bJK") == 0)
 			bJK		 = string(pVal) == "true";
@@ -267,7 +275,7 @@ ReadConfig(const string & strPath)
 		return false;
 	}
 
-	fprintf(stderr, "-----------------------------------------\n\n");
+	fprintf(stderr, "-----------------------------------------\n");
 	fclose(fpIn);
 	return true;
 }

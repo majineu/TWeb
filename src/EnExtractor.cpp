@@ -121,8 +121,8 @@ ExtractStrHardCodeFeature(int wInd,  SSentence &refSen,  vector<std::pair<wstrin
 void CEnFeatureExtractor::
 extractHardCodeFeature(int wInd,  SSentence &refSen)
 {
-	const wchar_t *pWord = refSen.GForm(wInd);
-//	const wchar_t *pWord = refSen.Word(wInd);
+//	const wchar_t *pWord = refSen.GForm(wInd);
+	const wchar_t *pWord = refSen.Word(wInd);
 	int *pBase = refSen.GetFeatures(wInd);		// newly modified
 	int wLen = wcslen(pWord);	
 	int minLen = std::min(wLen, CConfig::nFixLen);

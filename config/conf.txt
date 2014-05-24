@@ -6,18 +6,17 @@ testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/wsj_test.pos.gen2
 testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/answer_test.pos.gen.nor2
 testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/review_test.pos.gen.nor2
 testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup_test.pos.gen.nor2
-
-templatePath    ../templatesEn/tempGFNoOP1.2.txt
-nRound          10
-
-:: can be either top_one, all,  
-prefix          WebTagger	
-nFixLen         4	
 strLogDir       ../TWeb/logsEn/
 strModelPath    ../TWeb/modelsEn/
-strRBMPrefix    wrrbms/1_3NoWSJ_h300c17e38
 
-:: searn based learning
+nRound          10
+
+prefix          WebTagger	
+nFixLen         10	
+strRBMPrefix    wrrbms/1_3NoWSJ_h300c17e38
+templatePath    templates/tempGFNoOP1.2.txt
+
+
 bEnTagger       true	
 bEarlyUpdate    true
 
