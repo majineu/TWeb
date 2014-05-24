@@ -1,6 +1,3 @@
-::trainPath   /home/sutd/Ji/Tagger/wsj/wsj00-18.malt.webTagger
-::devPath     /home/sutd/Ji/Tagger/wsj/wsj19-21.malt.webTagger
-::testPath    /home/sutd/Ji/Tagger/wsj/wsj22-24.malt.webTagger
 trainPath     /home/sutd/Ji/Tagger/wsj/train.gen
 devPath       /home/sutd/Ji/Tagger/wsj/dev.gen
 testPath      /home/sutd/Ji/Tagger/wsj/test.gen
@@ -11,8 +8,8 @@ prefix        STD_WSJ_WORD_CH
 nFixLen       10	
 strLogDir     ../TWeb/logsEn/
 strModelPath  ../TWeb/modelsEn/
-templatePath  templates/tempGFNoOP1.2.txt
-::templatePath  ../templatesEn/tempNoOP.txt
+::templatePath  templates/tempGFNoOP1.2.txt
+templatePath  templates/tempNoOP.txt
 
 bEnTagger     true	
 bEarlyUpdate  true	
