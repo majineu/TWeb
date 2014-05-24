@@ -279,12 +279,10 @@ BuildPath()
 	string path = strPrefix + "_";
 	char buf[100];
 	path += bEarlyUpdate == true ? "earlyUp_":"";
-
-//	path += buf;
-	path += "nFDim_";
-	sprintf(buf, "%d", vIHSize[0]);
+	sprintf(buf, "nFDim_%d", vIHSize[0]);
 	path += buf;
-	
+	sprintf(buf, "fMargin_%.4f_fRate_%.4f", fMargin, fRate);
+	path += buf;
 //	if (nLowCount > 0)
 //		path += string("low_") + string(itoa(nLowCount, buf, 10));
 //	if (nRareWord > 0)

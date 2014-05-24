@@ -216,22 +216,21 @@ CNNScorer(CRBMNN *pRBMNN, int fEbdSize, int oDim)
 	m_oDim 	 = oDim;
 	int iDim = pRBMNN->HDim() + fEbdSize;
 	
-	fprintf(stderr, "# rbm hidden states:       %d\n", m_pRBMNN->HDim());
-	fprintf(stderr, "features embedding size:   %d\n", m_nfEbdSize);
-	fprintf(stderr, "output dimension:          %d\n", m_oDim);
-
 	m_pWOut = (double *) m_pool.Allocate(sizeof(double) * iDim * oDim);
 	for (int i = 0; i < iDim * oDim; ++i)
 		m_pWOut[i] = uniform(-0.01, 0.01); 
 
 	m_pGWOut= (double *) m_pool.Allocate(sizeof(double) * iDim * oDim);
-	memset(m_pGWOut, 0, sizeof(double) * iDim * oDim);
-	fprintf(stderr, "output weight matrix:      %d * %d\n", iDim, oDim);
-
 	m_pOBias  = (double *)m_pool.Allocate(sizeof(double) * oDim);
 	m_pGOBias = (double *)m_pool.Allocate(sizeof(double) * oDim);
+	memset(m_pGWOut, 0, sizeof(double) * iDim * oDim);
 	memset(m_pOBias,  0, sizeof(double) * oDim);
 	memset(m_pGOBias, 0, sizeof(double) * oDim);
+
+	fprintf(stderr, "rbm hidden states:            %d\n", m_pRBMNN->HDim());
+	fprintf(stderr, "feature embedding dimension:  %d\n", m_nfEbdSize);
+	fprintf(stderr, "output dimension:             %d\n", m_oDim);
+	fprintf(stderr, "output weight matrix:         %d * %d\n", iDim, oDim);
 	fprintf(stderr, "------------------------------------------\n");
 }
 
