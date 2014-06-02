@@ -193,7 +193,7 @@ void Train(vector<_SEN *> &senTrain,
 	{
 		fprintf(stderr, "\n-----------------------Training %d round----------------------\n", nIter);
 		vector<int> randIDs = Shuffel((int)senTrainGoldTag.size());
-		if (nIter < 8)
+		if (nIter < 100)
 			tagger.SetIMode(true);
 		
 		tagger.ResetStatis();
@@ -239,7 +239,9 @@ void Train(vector<_SEN *> &senTrain,
 			bestDevAcc = devAvgAcc;
 			bestTestAcc = testAvgAcc;
 			bestDevIter = nIter;
-			Save(path, tagger);
+
+			if (nIter > 5)
+				Save(path, tagger);
 		}
 	}
 

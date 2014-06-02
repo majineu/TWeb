@@ -239,7 +239,7 @@ TrainGreedy(_SEN *pSen, _SEN *pGold,
 		if (loss > 0 && CConfig::bEarlyUpdate)
 			break;
 	}
-
+	m_pNNScorer->IncCount();
 	return pSen;
 }
 

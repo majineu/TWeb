@@ -64,6 +64,13 @@ SWRRBM * SWRRBM:: RBMFromFile(const string & strPrefix)
 //-----------------------------------------------------------------------------
 
 
+
+
+
+
+
+
+
 CRBMNN::
 CRBMNN(SWRRBM *pRBM, bool verbose):
 	m_verbose(verbose)
@@ -203,14 +210,22 @@ Load(FILE *fp)
 	fprintf(stderr, "-----------------------------------------\n\n");
 	return true;
 }
-
-
 //------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 CNNScorer::
 CNNScorer(CRBMNN *pRBMNN, int fEbdSize, int oDim)
 {
 	fprintf(stderr, "\n-------------Create NN scorer-------------\n");
 	m_iMode = true;
+	m_nCount = 1;
 	m_pRBMNN = pRBMNN;
 	m_nfEbdSize = fEbdSize;
 	m_oDim 	 = oDim;
@@ -221,11 +236,16 @@ CNNScorer(CRBMNN *pRBMNN, int fEbdSize, int oDim)
 		m_pWOut[i] = uniform(-0.01, 0.01); 
 
 	m_pGWOut= (double *) m_pool.Allocate(sizeof(double) * iDim * oDim);
+	m_pTWOut= (double *) m_pool.Allocate(sizeof(double) * iDim * oDim);
 	m_pOBias  = (double *)m_pool.Allocate(sizeof(double) * oDim);
 	m_pGOBias = (double *)m_pool.Allocate(sizeof(double) * oDim);
+	m_pTOBias = (double *)m_pool.Allocate(sizeof(double) * oDim);
 	memset(m_pGWOut, 0, sizeof(double) * iDim * oDim);
+	memset(m_pTWOut, 0, sizeof(double) * iDim * oDim);
+	
 	memset(m_pOBias,  0, sizeof(double) * oDim);
 	memset(m_pGOBias, 0, sizeof(double) * oDim);
+	memset(m_pTOBias, 0, sizeof(double) * oDim);
 
 	fprintf(stderr, "rbm hidden states:            %d\n", m_pRBMNN->HDim());
 	fprintf(stderr, "feature embedding dimension:  %d\n", m_nfEbdSize);
@@ -336,6 +356,7 @@ Scoring(int *pFID, int nFID, double *pHidden)
 		{
 			m_vFEbd.resize(maxID * 1.2, nullptr);
 			m_vGFEbd.resize(maxID * 1.2, nullptr);
+			m_vTFEbd.resize(maxID * 1.2, nullptr);
 		}
 	}
 
@@ -347,6 +368,7 @@ Scoring(int *pFID, int nFID, double *pHidden)
 			continue;
 
 		double *pEbd = m_vFEbd[*p];
+		double *pTEbd = m_vTFEbd[*p];
 		if (pEbd == nullptr)
 		{
 			if (m_iMode == false)
@@ -357,20 +379,27 @@ Scoring(int *pFID, int nFID, double *pHidden)
 
 			m_vGFEbd[*p] = (double *)m_pool.Allocate(sizeof(double) * m_nfEbdSize);
 			memset(m_vGFEbd[*p], 0, sizeof(double) * m_nfEbdSize);
+			
+			pTEbd = m_vTFEbd[*p] = (double *)m_pool.Allocate(sizeof(double) * m_nfEbdSize);
+			memset(pTEbd, 0, sizeof(double) * m_nfEbdSize);
 		}
 		
 		for (int h = 0; h < m_nfEbdSize; ++h)
-			pHLinear[h] += pEbd[h];
+			pHLinear[h] += pEbd[h] - (m_bAverage ? pTEbd[h]/m_nCount : 0);
 	}
 
 	// compute the output layer
-	memcpy(pOut, m_pOBias, sizeof(double) * m_oDim);
+//		memcpy(pOut, m_pOBias, sizeof(double) * m_oDim);
+	for (int i = 0; i < m_oDim; ++i)
+		pOut[i] = m_pOBias[i] - (m_bAverage ? m_pTOBias[i]/m_nCount :0);
+
 	const int iDim = m_nfEbdSize + m_pRBMNN->HDim(); 
 	for (int i = 0; i < iDim; ++i)
 	{
-		double *pW = m_pWOut + i * m_oDim;
+		double *pW  = m_pWOut + i * m_oDim;
+		double *pTW = m_pTWOut + i * m_oDim; 
 		for (int o = 0 ; o < m_oDim; ++o)
-			pOut[o] += pHidden[i] * pW[o]; 
+			pOut[o] += pHidden[i] * (pW[o] - (m_bAverage ? pTW[o]/m_nCount :0)); 
 	}
 
 //	int maxID = 0;
@@ -416,10 +445,11 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 
 			double grad = pErrOut[o] * pHidden[i];// pHLinear[i];
 			m_pGWOut[baseIdx + o] += grad * grad;
-			if (m_pGWOut[baseIdx + o] < 1.0e-200)
-				m_pWOut[baseIdx + o] -= rate;
-			else
-				m_pWOut[baseIdx + o] -= rate * grad / sqrt(m_pGWOut[baseIdx + o]);
+//			if (m_pGWOut[baseIdx + o] < 1.0e-200)
+				m_pWOut[baseIdx + o] -= rate * grad;
+//			else
+//				m_pWOut[baseIdx + o] -= rate * grad / sqrt(m_pGWOut[baseIdx + o]);
+			m_pTWOut[baseIdx + o] -= m_nCount * rate * grad;// / sqrt(m_pGWOut[baseIdx + o]);
 		}
 	}
 
@@ -430,10 +460,11 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 			continue;
 
 		m_pGOBias[o] += pErrOut[o] * pErrOut[o];
-		if (m_pGOBias[o] < 1.0e-200)
-			m_pOBias[o] -= rate;
-		else
-			m_pOBias[o] -= rate *pErrOut[o]/sqrt(m_pGOBias[o]);
+//		if (m_pGOBias[o] < 1.0e-200)
+			m_pOBias[o] -= rate *pErrOut[o];
+//		else
+//			m_pOBias[o] -= rate *pErrOut[o]/sqrt(m_pGOBias[o]);
+		m_pTOBias[o] -= m_nCount * rate *pErrOut[o];// *pErrOut[o]/sqrt(m_pGOBias[o]);
 	}
 
 
@@ -446,6 +477,7 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 
 		double *pW  = m_vFEbd[*p];
 		double *pGW = m_vGFEbd[*p];
+		double *pTW = m_vTFEbd[*p];
 		for (int o = 0; o < m_nfEbdSize; ++o)
 		{
 			if (pErrLinear[o] == 0.0)
@@ -453,14 +485,11 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 		
 			double grad = pErrLinear[o];
 			pGW[o] += grad * grad; 
-			if (pGW[o] < 1.0e-200)
-			{
-				fprintf(stderr, "layer 0 fid %d gw[%d] %-4.4e, error %.4e\n", 
-						*p, 	o, 	pGW[o], 	pError[o]);
-				pW[o] -= rate;
-			}
-			else
-				pW[o] -= rate * grad/sqrt(pGW[o]);
+//			if (pGW[o] < 1.0e-200)
+				pW[o] -= rate * grad;
+//			else
+//				pW[o] -= rate * grad/sqrt(pGW[o]);
+			pTW[o] -= m_nCount * rate *grad;// * grad/sqrt(pGW[o]);
 		}
 	}
 	return;
