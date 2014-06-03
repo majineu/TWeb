@@ -9,10 +9,10 @@ testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup_test.pos.gen.nor
 strLogDir       ../TWeb/logsEn/
 strModelPath    ../TWeb/modelsEn/
 
-nRound          10
+nRound          20
 
-prefix          WebTagger	
-nFixLen         10	
+prefix          WebTagger_AvgParam	
+nFixLen         4	
 strRBMPrefix    wrrbms/1_3NoWSJ_h300c17e38
 templatePath    templates/tempGFNoOP1.2.txt
 

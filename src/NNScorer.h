@@ -94,6 +94,8 @@ public:
 	void Update(int *pFIDs, int nFID, double *pHidden, 
 							double *pError, double rate);
 	void Scoring(int *pFID, int nFID, double *pHidden);
+	void AverageParameter();
+	void UnAverage();
 	void Save(const string & strPath);
 	void Load(const string & strPath);
 
@@ -101,21 +103,24 @@ public:
 	int	ErrDim()								{return m_nfEbdSize + m_oDim;}
 	int FEbdSize()							{return m_nfEbdSize;}
 	int ODim()									{return m_oDim;}
-	void SetIMode(bool mode)		{m_iMode = mode; m_bAverage = !m_iMode;}
+	void SetIMode(bool mode)		{m_iMode = mode;}
 	void IncCount()							{++m_nCount;}
 	CRBMNN *GetRBMNN()					{return m_pRBMNN;}
 private:
 	vector<double *> 		m_vFEbd;		// m_vW[i][j]: weight from input unit i to output unit j
 	vector<double *> 		m_vGFEbd;		// G for weight matrix
 	vector<double *> 		m_vTFEbd;		// G for weight matrix
+	vector<double *>    m_vAvgEbd;
 
 	double 	*m_pWOut;					// output layer weight matrix
 	double  *m_pGWOut;				// accumulated gradients for the second layer weight matrix
 	double  *m_pTWOut;				// T: total, adding model average
-	
+	double  *m_pAvgWout;
+
 	double  *m_pOBias;				// output layer bias
 	double  *m_pGOBias;				// output layer bias
 	double  *m_pTOBias;				// adding model average
+	double  *m_pAvgOBias;
 
 	bool 		m_iMode;
 	bool    m_bAverage;

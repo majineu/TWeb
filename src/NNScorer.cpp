@@ -225,6 +225,7 @@ CNNScorer(CRBMNN *pRBMNN, int fEbdSize, int oDim)
 {
 	fprintf(stderr, "\n-------------Create NN scorer-------------\n");
 	m_iMode = true;
+	m_bAverage = false;
 	m_nCount = 1;
 	m_pRBMNN = pRBMNN;
 	m_nfEbdSize = fEbdSize;
@@ -235,17 +236,16 @@ CNNScorer(CRBMNN *pRBMNN, int fEbdSize, int oDim)
 	for (int i = 0; i < iDim * oDim; ++i)
 		m_pWOut[i] = uniform(-0.01, 0.01); 
 
-	m_pGWOut= (double *) m_pool.Allocate(sizeof(double) * iDim * oDim);
 	m_pTWOut= (double *) m_pool.Allocate(sizeof(double) * iDim * oDim);
 	m_pOBias  = (double *)m_pool.Allocate(sizeof(double) * oDim);
-	m_pGOBias = (double *)m_pool.Allocate(sizeof(double) * oDim);
 	m_pTOBias = (double *)m_pool.Allocate(sizeof(double) * oDim);
-	memset(m_pGWOut, 0, sizeof(double) * iDim * oDim);
 	memset(m_pTWOut, 0, sizeof(double) * iDim * oDim);
-	
-	memset(m_pOBias,  0, sizeof(double) * oDim);
-	memset(m_pGOBias, 0, sizeof(double) * oDim);
 	memset(m_pTOBias, 0, sizeof(double) * oDim);
+	memset(m_pOBias,  0, sizeof(double) * oDim);
+//	m_pGWOut= (double *) m_pool.Allocate(sizeof(double) * iDim * oDim);
+//	m_pGOBias = (double *)m_pool.Allocate(sizeof(double) * oDim);
+//	memset(m_pGWOut, 0, sizeof(double) * iDim * oDim);
+//	memset(m_pGOBias, 0, sizeof(double) * oDim);
 
 	fprintf(stderr, "rbm hidden states:            %d\n", m_pRBMNN->HDim());
 	fprintf(stderr, "feature embedding dimension:  %d\n", m_nfEbdSize);
@@ -263,10 +263,10 @@ CNNScorer::
 void CNNScorer::
 Save(const string & strPath)
 {
-//	m_pRBMNN->Save((strPath + ".rbmNN").c_str());   : new update
 	FILE *fp = fopen(strPath.c_str(), "wb");
 	assert(fp);
 
+	AverageParameter();				// only save averaged parameters
 	m_pRBMNN->Save(fp);
 	
 	fwrite(&m_nfEbdSize, sizeof(m_nfEbdSize), 1, fp);
@@ -301,6 +301,7 @@ Load(const string & strPath)
 	FILE *fp = fopen(strPath.c_str(), "rb");
 	assert(fp);
 	
+	m_bAverage = true;				// we only save averaged parameters
 	m_pRBMNN->Load(fp);
 	fread(&m_nfEbdSize, sizeof(m_nfEbdSize), 1, fp);
 	fread(&m_oDim, sizeof(m_oDim), 1, fp);
@@ -355,7 +356,7 @@ Scoring(int *pFID, int nFID, double *pHidden)
 		if (maxID >= (int)m_vFEbd.size() && m_iMode)
 		{
 			m_vFEbd.resize(maxID * 1.2, nullptr);
-			m_vGFEbd.resize(maxID * 1.2, nullptr);
+//			m_vGFEbd.resize(maxID * 1.2, nullptr);
 			m_vTFEbd.resize(maxID * 1.2, nullptr);
 		}
 	}
@@ -377,29 +378,26 @@ Scoring(int *pFID, int nFID, double *pHidden)
 			pEbd = m_vFEbd[*p] = (double *)m_pool.Allocate(sizeof(double) * m_nfEbdSize);
 			memset(pEbd, 0, sizeof(double) * m_nfEbdSize);
 
-			m_vGFEbd[*p] = (double *)m_pool.Allocate(sizeof(double) * m_nfEbdSize);
-			memset(m_vGFEbd[*p], 0, sizeof(double) * m_nfEbdSize);
+//			m_vGFEbd[*p] = (double *)m_pool.Allocate(sizeof(double) * m_nfEbdSize);
+//			memset(m_vGFEbd[*p], 0, sizeof(double) * m_nfEbdSize);
 			
 			pTEbd = m_vTFEbd[*p] = (double *)m_pool.Allocate(sizeof(double) * m_nfEbdSize);
 			memset(pTEbd, 0, sizeof(double) * m_nfEbdSize);
 		}
 		
 		for (int h = 0; h < m_nfEbdSize; ++h)
-			pHLinear[h] += pEbd[h] - (m_bAverage ? pTEbd[h]/m_nCount : 0);
+			pHLinear[h] += pEbd[h];
 	}
 
 	// compute the output layer
-//		memcpy(pOut, m_pOBias, sizeof(double) * m_oDim);
-	for (int i = 0; i < m_oDim; ++i)
-		pOut[i] = m_pOBias[i] - (m_bAverage ? m_pTOBias[i]/m_nCount :0);
+	memcpy(pOut, m_pOBias, sizeof(double) * m_oDim);
 
 	const int iDim = m_nfEbdSize + m_pRBMNN->HDim(); 
 	for (int i = 0; i < iDim; ++i)
 	{
 		double *pW  = m_pWOut + i * m_oDim;
-		double *pTW = m_pTWOut + i * m_oDim; 
 		for (int o = 0 ; o < m_oDim; ++o)
-			pOut[o] += pHidden[i] * (pW[o] - (m_bAverage ? pTW[o]/m_nCount :0)); 
+			pOut[o] += pHidden[i] * pW[o]; 
 	}
 
 //	int maxID = 0;
@@ -425,6 +423,66 @@ BPError(double *pError, int nonZeroIdx)
 }
 
 void CNNScorer::
+AverageParameter()
+{
+	if (m_bAverage == true)
+		return;
+	m_bAverage = true;
+	m_vAvgEbd.resize(m_vFEbd.size(), NULL);
+	for (size_t i = 0; i < m_vFEbd.size(); ++i)
+	{
+		if (m_vFEbd[i] != NULL)
+		{
+			m_vAvgEbd[i] = new double[m_nfEbdSize];
+			assert(m_vAvgEbd[i]);
+			for (int k = 0; k < m_nfEbdSize; ++k)
+				m_vAvgEbd[i][k] = m_vFEbd[i][k] - m_vTFEbd[i][k]/m_nCount;
+
+			std::swap(m_vAvgEbd[i], m_vFEbd[i]);
+		}
+	}
+	
+	const int iDim = m_pRBMNN->HDim() + m_nfEbdSize;
+	m_pAvgOBias = new double[m_oDim];
+	m_pAvgWout  = new double[iDim * m_oDim];
+	assert(m_pAvgOBias);
+	assert(m_pAvgWout);
+	for (int o = 0; o < m_oDim; ++o)
+	{
+		m_pAvgOBias[o] = m_pOBias[o] - m_pTOBias[o]/m_nCount;
+		for (int i = 0; i < iDim; ++i)
+		{
+			int idx = i * m_oDim + o;
+			m_pAvgWout[idx] = m_pWOut[idx] - m_pTWOut[idx]/m_nCount;
+		}
+	}
+
+	std::swap(m_pAvgOBias, m_pOBias);
+	std::swap(m_pAvgWout, m_pWOut);
+}
+
+void CNNScorer::
+UnAverage()
+{
+	if (m_bAverage == false)
+		return;
+	m_bAverage = false;
+	for (size_t i = 0; i < m_vFEbd.size(); ++i)
+		if (m_vFEbd[i])
+		{
+			std::swap(m_vAvgEbd[i], m_vFEbd[i]);
+			delete [] m_vAvgEbd[i];
+		}
+	m_vAvgEbd.clear();
+	std::swap(m_pAvgOBias, m_pOBias);
+	std::swap(m_pAvgWout, m_pWOut);
+	delete[] m_pAvgOBias;
+	delete[] m_pAvgWout;
+}
+
+
+// standard sgd with average parameter, instead of adagrad
+void CNNScorer::
 Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 {
 	double *pErrLinear = pError;
@@ -444,7 +502,7 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 				continue;
 
 			double grad = pErrOut[o] * pHidden[i];// pHLinear[i];
-			m_pGWOut[baseIdx + o] += grad * grad;
+//			m_pGWOut[baseIdx + o] += grad * grad;
 //			if (m_pGWOut[baseIdx + o] < 1.0e-200)
 				m_pWOut[baseIdx + o] -= rate * grad;
 //			else
@@ -459,7 +517,7 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 		if (pErrOut[o] == 0)
 			continue;
 
-		m_pGOBias[o] += pErrOut[o] * pErrOut[o];
+//		m_pGOBias[o] += pErrOut[o] * pErrOut[o];
 //		if (m_pGOBias[o] < 1.0e-200)
 			m_pOBias[o] -= rate *pErrOut[o];
 //		else
@@ -476,7 +534,7 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 			continue;
 
 		double *pW  = m_vFEbd[*p];
-		double *pGW = m_vGFEbd[*p];
+//		double *pGW = m_vGFEbd[*p];
 		double *pTW = m_vTFEbd[*p];
 		for (int o = 0; o < m_nfEbdSize; ++o)
 		{
@@ -484,7 +542,7 @@ Update(int *pFID, int nFID, double *pHidden, double *pError, double rate)
 				continue;
 		
 			double grad = pErrLinear[o];
-			pGW[o] += grad * grad; 
+//			pGW[o] += grad * grad; 
 //			if (pGW[o] < 1.0e-200)
 				pW[o] -= rate * grad;
 //			else

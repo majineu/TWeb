@@ -193,24 +193,26 @@ void Train(vector<_SEN *> &senTrain,
 	{
 		fprintf(stderr, "\n-----------------------Training %d round----------------------\n", nIter);
 		vector<int> randIDs = Shuffel((int)senTrainGoldTag.size());
-		if (nIter < 100)
+		if (nIter < 5)
 			tagger.SetIMode(true);
 		
 		tagger.ResetStatis();
 		clock_t start = clock();
+		tagger.GetNNScorer()->UnAverage();
 		for (size_t i = 0; i < randIDs.size(); ++ i)
 		{
 			tagger.TrainGreedy(senTrain[randIDs[i]], 
 												 senTrainGoldTag[randIDs[i]], 
 												 CConfig::fRate, CConfig::fMargin);
 			
-			if (i != 0 && i % 200 == 0)
+			if (i != 0 && i % 400 == 0)
 			{
 				CTagger::SStatics statics = tagger.GetStatics();
 				fprintf(stderr, "%lu sen, %d updates\r", i, statics.nRetry);
 			}
 		}
 
+		tagger.GetNNScorer()->AverageParameter();
 		CTagger::SStatics statics = tagger.GetStatics();
 		double secs = (double)(clock() - start)/CLOCKS_PER_SEC;
 		fprintf(stderr, "%d sen, %d updates, %.2f secs\n",
@@ -240,7 +242,7 @@ void Train(vector<_SEN *> &senTrain,
 			bestTestAcc = testAvgAcc;
 			bestDevIter = nIter;
 
-			if (nIter > 5)
+			if (nIter >= 6)
 				Save(path, tagger);
 		}
 	}

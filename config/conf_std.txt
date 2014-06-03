@@ -10,6 +10,7 @@ strLogDir     ../TWeb/logsEn/
 strModelPath  ../TWeb/modelsEn/
 ::templatePath  templates/tempGFNoOP1.2.txt
 templatePath  templates/tempNoOP.txt
+strRBMPrefix    wrrbms/1_3NoWSJ_h300c17e38
 
 bEnTagger     true	
 bEarlyUpdate  true	
@@ -18,6 +19,6 @@ fMargin       0.05
 fRate         0.01
 bCharacterFeatureFromWord true
 
-vIHSize       100 
+vIHSize       20 
 vIHType       linear	
 
