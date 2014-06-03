@@ -1,3 +1,5 @@
+:: lines start with :: will be ignored
+
 trainPath       sampleData/wsj_train.pos.gen2.300
 devPath         sampleData/wsj_dev.pos.gen2.300
 devPath         sampleData/email_dev.pos.gen.nor2.300

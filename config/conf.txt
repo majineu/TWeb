@@ -1,3 +1,5 @@
+:: lines start with :: will be ignored
+
 trainPath       /home/sutd/Ji/Data/TaggingTheWeb/train/wsj_train.pos.gen2
 devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/wsj_dev.pos.gen2
 devPath         /home/sutd/Ji/Data/TaggingTheWeb/dev/email_dev.pos.gen.nor2
@@ -9,7 +11,7 @@ testPath        /home/sutd/Ji/Data/TaggingTheWeb/test/newsgroup_test.pos.gen.nor
 strLogDir       ../TWeb/logsEn/
 strModelPath    ../TWeb/modelsEn/
 
-nRound          20
+nRound          30
 
 prefix          WebTagger_AvgParam	
 nFixLen         4	
@@ -21,8 +23,8 @@ bEnTagger       true
 bEarlyUpdate    true
 
 bTagVerbose     false	
-fMargin         0.05
-fRate           0.01
+fMargin         0.005
+fRate           0.001
 
 vIHSize         20 
 vIHType         linear	

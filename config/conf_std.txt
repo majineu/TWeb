@@ -1,3 +1,6 @@
+:: lines start with :: will be ignored
+:: config file used to train a standard Penn Treebank tagger
+
 trainPath     /home/sutd/Ji/Tagger/wsj/train.gen
 devPath       /home/sutd/Ji/Tagger/wsj/dev.gen
 testPath      /home/sutd/Ji/Tagger/wsj/test.gen
@@ -10,7 +13,7 @@ strLogDir     ../TWeb/logsEn/
 strModelPath  ../TWeb/modelsEn/
 ::templatePath  templates/tempGFNoOP1.2.txt
 templatePath  templates/tempNoOP.txt
-strRBMPrefix    wrrbms/1_3NoWSJ_h300c17e38
+::strRBMPrefix    wrrbms/1_3NoWSJ_h300c17e38
 
 bEnTagger     true	
 bEarlyUpdate  true	
